@@ -1,4 +1,4 @@
-From 85243c9b6c8fe65ec760d62fdcd88bd12f0d8a66 Mon Sep 17 00:00:00 2001
+From 52d99b7482628566e71f6735db0e93322be7c810 Mon Sep 17 00:00:00 2001
 From: Hibiki Tachibana <57486057+Hibbiki@users.noreply.github.com>
 Date: Sat, 22 Jul 2023 01:33:35 +0200
 Subject: [PATCH 3/4] Ensure bogus ElevationService is not being created during
@@ -10,10 +10,10 @@ Signed-off-by: Hibiki Tachibana <57486057+Hibbiki@users.noreply.github.com>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/chrome/installer/setup/install_worker.cc b/chrome/installer/setup/install_worker.cc
-index a635e1b48d637..d14a65b70fc66 100644
+index b6820904334e2..dda1c5262d2de 100644
 --- a/chrome/installer/setup/install_worker.cc
 +++ b/chrome/installer/setup/install_worker.cc
-@@ -320,6 +320,7 @@ void AddChromeWorkItems(const InstallParams& install_params,
+@@ -337,6 +337,7 @@ void AddChromeWorkItems(const InstallParams& install_params,
        ->set_best_effort(true);
  }
  
@@ -21,7 +21,7 @@ index a635e1b48d637..d14a65b70fc66 100644
  // Adds work items to register the Elevation Service with Windows. Only for
  // system level installs.
  void AddElevationServiceWorkItems(const base::FilePath& elevation_service_path,
-@@ -404,7 +405,6 @@ void AddTracingServiceWorkItems(const InstallationState& original_state,
+@@ -421,7 +422,6 @@ void AddTracingServiceWorkItems(const InstallationState& original_state,
    }
  }
  
@@ -29,7 +29,7 @@ index a635e1b48d637..d14a65b70fc66 100644
  // Adds work items to add the "store-dmtoken" command to Chrome's version key.
  // This method is a no-op if this is anything other than system-level Chrome.
  // The command is used when enrolling Chrome browser instances into enterprise
-@@ -1028,7 +1028,7 @@ void AddInstallWorkItems(const InstallParams& install_params,
+@@ -1049,7 +1049,7 @@ void AddInstallWorkItems(const InstallParams& install_params,
                                      install_list);
    AddPlatformExperienceHelperWorkItems(installer_state, new_version,
                                         install_list);
@@ -38,7 +38,7 @@ index a635e1b48d637..d14a65b70fc66 100644
    AddFirewallRulesWorkItems(installer_state, !current_version.IsValid(),
                              install_list);
  
-@@ -1038,10 +1038,12 @@ void AddInstallWorkItems(const InstallParams& install_params,
+@@ -1059,10 +1059,12 @@ void AddInstallWorkItems(const InstallParams& install_params,
        installer_state.root_key(),
        GetNotificationHelperPath(target_path, new_version), install_list);
  
@@ -51,7 +51,7 @@ index a635e1b48d637..d14a65b70fc66 100644
  
    AddUpdateDowngradeVersionItem(installer_state.root_key(), current_version,
                                  new_version, install_list);
-@@ -1321,10 +1323,12 @@ void AddFinalizeUpdateWorkItems(const InstallationState& original_state,
+@@ -1345,10 +1347,12 @@ void AddFinalizeUpdateWorkItems(const InstallationState& original_state,
    AddWerHelperRegistration(installer_state.root_key(),
                             GetWerHelperPath(target_path, new_version), list);
  

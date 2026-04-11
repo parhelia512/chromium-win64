@@ -1,4 +1,4 @@
-From 2127d2986cb1d520538e527672234f66d5ea15c4 Mon Sep 17 00:00:00 2001
+From bafa2ed128f2558dfa0449597380010ed57754f6 Mon Sep 17 00:00:00 2001
 From: Hibiki Tachibana <57486057+Hibbiki@users.noreply.github.com>
 Date: Wed, 12 Jun 2024 02:14:41 +0200
 Subject: [PATCH 2/4] Patch updater to work with unsigned and unbranded builds
@@ -12,10 +12,10 @@ Signed-off-by: Hibiki Tachibana <57486057+Hibbiki@users.noreply.github.com>
  4 files changed, 19 insertions(+), 42 deletions(-)
 
 diff --git a/chrome/install_static/chromium_install_modes.h b/chrome/install_static/chromium_install_modes.h
-index 0cf937413e08a..e2b57a664660f 100644
+index ee62888f89705..44d5f11fe8f49 100644
 --- a/chrome/install_static/chromium_install_modes.h
 +++ b/chrome/install_static/chromium_install_modes.h
-@@ -32,8 +32,7 @@ inline constexpr auto kInstallModes = std::to_array<InstallConstants>({
+@@ -43,8 +43,7 @@ inline constexpr auto kInstallModes = std::to_array<InstallConstants>({
          .install_suffix =
              L"",  // Empty install_suffix for the primary install mode.
          .logo_suffix = L"",  // No logo suffix for the primary install mode.
@@ -26,10 +26,10 @@ index 0cf937413e08a..e2b57a664660f 100644
          .base_app_id = L"Chromium",                // A distinct base_app_id.
          .browser_prog_id_prefix = L"ChromiumHTM",  // Browser ProgID prefix.
 diff --git a/chrome/updater/BUILD.gn b/chrome/updater/BUILD.gn
-index 7dd79383dc33f..8a91b05b3a77c 100644
+index f96e237f31f89..07d5cbf2168fc 100644
 --- a/chrome/updater/BUILD.gn
 +++ b/chrome/updater/BUILD.gn
-@@ -377,6 +377,7 @@ if (is_win || is_mac || is_linux) {
+@@ -381,6 +381,7 @@ if (is_win || is_mac || is_linux) {
          "//chrome/installer/util:constants",
          "//chrome/installer/util:metainstaller_utils",
          "//chrome/installer/util:work_item",
@@ -38,7 +38,7 @@ index 7dd79383dc33f..8a91b05b3a77c 100644
          "//chrome/updater/app/server/win:updater_idl_system",
          "//chrome/updater/app/server/win:updater_idl_user",
 diff --git a/chrome/updater/win/installer/installer.cc b/chrome/updater/win/installer/installer.cc
-index 8ac15e717c231..8be5d7f8b0a47 100644
+index d2e249343ae31..40a9312493425 100644
 --- a/chrome/updater/win/installer/installer.cc
 +++ b/chrome/updater/win/installer/installer.cc
 @@ -11,6 +11,11 @@
